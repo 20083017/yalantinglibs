@@ -2,13 +2,17 @@
 #include <thread>
 
 #include "metric.hpp"
+
+#include "thread_local_value.hpp"
 #include "ylt/util/map_sharded.hpp"
 
 namespace ylt::metric {
 
 class dynamic_metric : public metric_t {
  public:
-  using metric_t::metric_t;
+   static inline auto g_user_metric_label_count =
+       new thread_local_value<int64_t>(std::thread::hardware_concurrency());
+   using metric_t::metric_t;
 };
 
 template <typename core_type, uint8_t N>
